@@ -142,24 +142,33 @@ exports.homepage = (req, res) => {
  * Home /Register 
 */
 exports.homePost = async (req, res) => {
-    try{
+    if(/[A-Z]/.test(req.body.username) || /\s/.test(req.body.username)) {
+        req.session.message = {
+            type: 'danger',
+            intro: 'Warning:',
+            message: 'Please use only lowercase letters and spaces in Username'
+          }
+          res.redirect('/')
+          
+    }
+    if(!(/[A-Z]/.test(req.body.username) || /\s/.test(req.body.username))) {
+        try{
             const image = await RandomPicture()
     .then(url => {
         return url;
     })
+        let user = new User({
+            username: req.body.username,
+            password: hashSync(req.body.password, 10),
+            thumbnail: image.url
+        })
     
+        await user.save()
     
-    let user = new User({
-        username: req.body.username,
-        password: hashSync(req.body.password, 10),
-        thumbnail: image.url
-    })
-
-    await user.save()
-
-    res.redirect('login')
-    }catch(e){
-        res.send(e)
+        res.redirect('login')
+        }catch(e){
+            res.send(e)
+        }  
     }
 }
 
