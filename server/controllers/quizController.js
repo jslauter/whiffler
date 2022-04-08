@@ -41,7 +41,7 @@ exports.quiz = async (req, res) => {
     urbanWords.list.forEach((el)=>{
         let currWord = el.word.toLowerCase()
         let currDef = el.definition.replace(/[\[\]']+/g,'').split('.', 1)[0].toLowerCase()
-        let cleanedDef = currDef.replace(currWord," ")
+        let cleanedDef = currDef.replace(currWord,'')
         wordDefinitionObj[el.word] = cleanedDef
     })
 
@@ -58,7 +58,7 @@ exports.quizPost = async (req, res) => {
     const urbanWords = await urbanDictionary()
     
     urbanWords.list.forEach((el)=>{
-        wrongDefinitions.push(el.definition.split('. ', 1)[0].replace(/[\[\]']+/g,''))
+        wrongDefinitions.push(el.definition.toLowerCase().split('. ', 1)[0].replace(/[\[\]']+/g,'').replace(el.word, ''))
     })
 
     const wordArr = req.body.quizWords.split(/,,/)
@@ -98,27 +98,28 @@ exports.quizPost = async (req, res) => {
 exports.quizSubmit = async (req, res) => {
     try {
         const quiz = await Quiz.findById(req.params.id)
+        const answer = quiz.correctDefinition
 
         if(req.body.flexRadioDefault == quiz.correctDefinition){
             await User.findOneAndUpdate({username : req.user.username},{$inc: { score: 2 }})
             req.session.message = {
                 type: 'danger',
                 intro: 'CONGRATS! ',
-                message: 'You chose the CORRECT answer!!'
+                message: `You chose "${answer}" , which was CORRECT!!`
               }
         }else if(req.body.flexRadioDefault == quiz.userSubmittedDefinition){
             await User.findOneAndUpdate({username : quiz.quizCreator},{$inc: { score: 1 }})
             req.session.message = {
                 type: 'danger',
-                intro: 'HAHA!!',
-                message: `You chose ${quiz.quizCreator}'s answer!!`
+                intro: 'WRONG!!',
+                message: `"${quiz.userSubmittedDefinition}" was ${quiz.quizCreator}'s answer!!`
               }
         }else if(req.body.flexRadioDefault != quiz.userSubmittedDefinition && req.body.flexRadioDefault != quiz.correctDefinition){
             await User.findOneAndUpdate({username : quiz.quizCreator},{$inc: { score: 1 }})
             req.session.message = {
                 type: 'danger',
                 intro: 'FAIL!!',
-                message: 'You chose your POORLY!!'
+                message: `You chose your POORLY!! The correct answer was: "${answer}"`
               }
         }
 
