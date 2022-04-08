@@ -9,11 +9,9 @@ const UserSchema = new Schema({
     },
     score: {
         type: Number,
-        default: 0
     },
     rank: {
         type: Number,
-        default: 0
     },
     username: {
         type: String,
@@ -30,6 +28,5 @@ const UserSchema = new Schema({
         type: String
     }
 })
-
 
 module.exports = mongoose.model('User', UserSchema);
