@@ -1,0 +1,182 @@
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<head>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
+    integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+    integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous">
+</script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+    integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous">
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=Rubik:ital,wght@0,500;1,300&display=swap"
+    rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="styles.css">
+
+<body style="font-family: 'IBM Plex Mono', monospace;">
+    <div class="container-xxl px-md-5 bg-white shadow-lg order-med-2">
+        <header
+            class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+            <a href="/profile" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
+                <h3 class="display-4 text-primary text-right mx-3">Whiffler</h3> <img
+                    src="https://i.imgur.com/7UHoXUK.png" class="w-25" alt="">
+            </a>
+
+
+            <nav class="navbar navbar-expand-lg navbar-light">
+                <a class="navbar-brand" href="#"></a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item active px-1">
+                            <a class="nav-link-primary" href="/logout">Logout / <span
+                                    class="sr-only">(current)</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link-primary px-1" href="/about">How To Play / </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link-primary px-1" href="/contact">Contact / </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link-primary px-1" href="/quiz">Create a Whiffler</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+        </header>
+
+
+        <div class="container-fluid gedf-wrapper">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class=""><img class="rounded-circle" width="80" height="80" src="<%=user.thumbnail%> "
+                                    alt="">
+                            </div>
+                            <div class="h5"><%=user.username%>'s Stats </div>
+
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">
+                                <div class="h6 text-muted">Ranking #</div>
+                                <div class="h5"><%-index %> </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="h6 text-muted">Total Points</div>
+                                <div class="h5"><%-user.score %> </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6 gedf-main">
+
+                    <% if(message) {%>
+                    <div style="text-align: center" class="alert alert-<%message.type%>">
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <strong><%=message.intro %> </strong><%=message.message %>
+                    </div>
+                    <% } %>
+
+                    <!--- \\\\\\\Post-->
+
+                    <% let quizForFeed = []%>
+
+                    <% quizzes.forEach((quiz)=>{%>
+                    <%  if(!quiz.usersWhoCompleted.includes(user.username)){%>
+                    <%   quizForFeed.push(quiz)%>
+                    <%  }%>
+                    <% })%>
+                    <% if(quizForFeed.length == 0){%>
+                    <h1>No more quizzes, wait for more to be created :)</h1>
+                    <%}%>
+
+
+                    <% quizForFeed.forEach(function(quiz,index){ %>
+                    <div class="card gedf-card">
+                        <div class="card-header">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="mr-2">
+                                        <img class="rounded-circle" width="45" height="45"
+                                            src="<%-quiz.quizCreatorThumbnail %> " alt="">
+                                    </div>
+                                    <div class="ml-2">
+                                        <div class="h6 m-0"><%-quiz.quizCreator%>'s Quiz </div>
+
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="dropdown">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="card-body">
+                            <a class="card-link" href="#">
+                                <h5 class="card-title text-center h2 border-bottom"><%-quiz.chosenWord  %> </h5>
+                            </a>
+
+                            <p class="card-text">
+                                <p class="h5 text-center my-4">Choose the Correct Definition</p>
+                                <form action="/quiz/<%=quiz._id%>?_method=PUT" method="POST">
+                                    <% quiz.wrongDefs.forEach(function(def, index){%>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault"
+                                            id="flexRadioDefault1" value="<%-def%>" required>
+                                        <label class="form-check-label" for="flexRadioDefault1">
+                                            <%-def %>
+                                        </label>
+                                    </div>
+                                    <%  })  %>
+                                    <div class="button-wrapper text-center">
+                                        <button class="btn btn-lg btn-primary mt-2">Submit</button>
+                                    </div>
+                                </form>
+                            </p>
+                        </div>
+                    </div>
+                    <br>
+                    <%  }) %>
+                </div>
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-header bg-warning">
+                            Leaderboard
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <% leaders.forEach((leader)=>{%>
+                            <li class="list-group-item"><%-leader.username %> : <%- leader.score %> </li>
+                            <%}) %>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="py-5 text-center">
+        <p>&copy 2022 Whiffler</p>
+    </footer>
+    <script src="script.js"></script>
+</body>
+
+</html>
