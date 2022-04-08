@@ -146,7 +146,7 @@ exports.homePost = async (req, res) => {
         req.session.message = {
             type: 'danger',
             intro: 'Warning:',
-            message: 'Please use only lowercase letters and spaces in Username'
+            message: 'Please use only lowercase letters and NO spaces in Username'
           }
           res.redirect('/')
           
