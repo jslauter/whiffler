@@ -98,7 +98,7 @@
 
                     <% let quizForFeed = []%>
 
-                    <% quizzes.forEach((quiz)=>{%>
+                    <% shuffledQuizzes.forEach((quiz)=>{%>
                     <%  if(!quiz.usersWhoCompleted.includes(user.username)){%>
                     <%   quizForFeed.push(quiz)%>
                     <%  }%>

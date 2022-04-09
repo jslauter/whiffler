@@ -63,7 +63,9 @@ exports.quizPost = async (req, res) => {
 
     const wordArr = req.body.quizWords.split(/,,/)
 
-    wrongDefinitions.splice(4)
+    //wrong definitions?
+    wrongDefinitions.splice(6)
+   
     //correct definition
     wrongDefinitions.push(wordArr[1])
 
@@ -181,6 +183,7 @@ exports.login = async (req, res) => {
     res.render('login')
 }
 
+
 /**
  * GET /
  * PROFILE 
@@ -188,11 +191,16 @@ exports.login = async (req, res) => {
 exports.profile = async (req, res) => {
     try{
         if (req.isAuthenticated()) {
-            const quizzes = await Quiz.find({}).limit(15)
+            const quizzes = await Quiz.find({}).limit(50)
+            //shuffle the returned quizzes
+            const shuffledQuizzes = quizzes
+            .map(value => ({ value, sort: Math.random() }))
+            .sort((a, b) => a.sort - b.sort)
+            .map(({ value }) => value)            
             const leaders = await User.find({}).sort({score: -1}).limit(6)
             const ranking = await User.find({}).sort({score: -1})
             const index = ranking.findIndex(item => item.username === req.user.username) + 1
-            res.render('profile', { user: req.user, quizzes,leaders, index})
+            res.render('profile', { user: req.user, shuffledQuizzes,leaders, index})
         } else {
             res.render('index')
         }
