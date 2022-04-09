@@ -63,8 +63,8 @@ exports.quizPost = async (req, res) => {
 
     const wordArr = req.body.quizWords.split(/,,/)
 
-    //wrong definitions
-    wrongDefinitions.splice(1)
+    // limit wrong definitions
+    wrongDefinitions.splice(2)
    
     //correct definition
     wrongDefinitions.push(wordArr[1])
