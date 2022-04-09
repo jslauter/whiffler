@@ -63,8 +63,8 @@ exports.quizPost = async (req, res) => {
 
     const wordArr = req.body.quizWords.split(/,,/)
 
-    //wrong definitions?
-    wrongDefinitions.splice(6)
+    //wrong definitions
+    wrongDefinitions.splice(1)
    
     //correct definition
     wrongDefinitions.push(wordArr[1])
@@ -88,6 +88,7 @@ exports.quizPost = async (req, res) => {
         usersWhoCompleted: req.user.username,
         quizCreatorThumbnail: req.user.thumbnail
     })
+    console.log(quiz)
     await quiz.save()
     res.redirect('profile')
 }
@@ -191,7 +192,9 @@ exports.login = async (req, res) => {
 exports.profile = async (req, res) => {
     try{
         if (req.isAuthenticated()) {
+            
             const quizzes = await Quiz.find({}).limit(50)
+            
             //shuffle the returned quizzes
             const shuffledQuizzes = quizzes
             .map(value => ({ value, sort: Math.random() }))
